@@ -1,0 +1,20 @@
+[
+    {
+        "nome": "ga",
+        "especie": "asfdas",
+        "idade": 12,
+        "peso": 12.0,
+        "nome_dono": "prtin",
+        "vacinado": true,
+        "hospedado": false
+    },
+    {
+        "nome": "luiz",
+        "especie": "luiz",
+        "idade": 1,
+        "peso": 423.0,
+        "nome_dono": "paiHomi",
+        "vacinado": true,
+        "hospedado": false
+    }
+]
