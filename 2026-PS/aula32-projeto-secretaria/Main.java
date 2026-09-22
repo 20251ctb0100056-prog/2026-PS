@@ -25,25 +25,33 @@ public class Main {
 
         // while (true) = repete para sempre. A unica saida e o break da opcao 0.
         while (true) {
-            System.out.println("=========================================");
-            System.out.println("   SECRETARIA DO SEU NOME");
-            System.out.println("=========================================");
+            System.out.println("=============================================");
+            System.out.println("    SECRETARIA DO SEU NOME");
+            System.out.println("=============================================");
             System.out.println("[1] Cadastrar aluno");
             System.out.println("[2] Listar alunos");
+            System.out.println("[3] Buscar por matricula");
+            System.out.println("[4] Atualizar curso");
+            System.out.println("[5] Remover alunos");
             System.out.println("[0] Sair");
             System.out.print("Sua escolha: ");
-            String opcao = teclado.nextLine().trim(); // trim: tira espacos das pontas
-
+            
+            String opcao = teclado.nextLine().trim();  // trim: tira espaços das pontas
+            
             // Texto se compara com .equals, nunca com == (isso vale ouro em Java).
             if (opcao.equals("0")) {
                 System.out.println("Secretaria fechada. Ate a proxima!");
                 break;
             } else if (opcao.equals("1")) {
                 cadastrar(lista, teclado);
-            } else if (opcao.equals("2")) {2
+            } else if (opcao.equals("2")) {
                 listar(lista);
+            } else if (opcao.equals("3")) {
+                buscar(lista, teclado);
+            } else if (opcao.equals("4")) {
+                atualizar(lista, teclado);
             } else {
-                System.out.println("Opcao invalida! Vale 0, 1 ou 2.");
+                System.out.println("Opcao invalida! Vale 0, 1, 2, 3 ou 4.");
             }
         }
     }
@@ -57,26 +65,71 @@ public class Main {
         System.out.print("Curso: ");
         String curso = teclado.nextLine().trim();
 
-        Aluno novo = new Aluno(nome,matricula,curso);
+        // Cria a ficha e preenche os dados pelos metodos da classe Aluno.
+        Aluno novo = new Aluno();
+        novo.setNome(nome);
+        novo.setMatricula(matricula);
+        novo.setCurso(curso);
         lista.add(novo);
-        System.out.println("ficha de "+ novo.getNome() + " arquivada!");
-
-
-
-        }
-       
+        System.out.println("Ficha de " + novo.getNome() + " arquivada!");
+    }
 
     // Percorre o gaveteiro e imprime ficha por ficha (padrao da Aula 29).
     static void listar(ArrayList<Aluno> lista) {
         if (lista.size() == 0) {
-    System.out.println("Nenhuma ficha no gaveteiro ainda.");
-    return;
-}
-    System.out.println("--- FICHAS NO GAVETEIRO: " + lista.size() + " ---");
-    for (int i = 0; i < lista.size(); i++) {
-    Aluno a = lista.get(i);
-    System.out.println(a.getMatricula() + " | " + a.getNome() + " | " + a.getCurso());
-}
+            System.out.println("Nenhuma ficha no gaveteiro ainda.");
+            return;
+        }
 
+        System.out.println("--- FICHAS NO GAVETEIRO: " + lista.size() + " ---");
+        for (int i = 0; i < lista.size(); i++) {
+            Aluno a = lista.get(i);
+            System.out.println(a.getMatricula() + " | " + a.getNome() + " | " + a.getCurso());
+        }
+    }
+
+    // O CORACAO DO SISTEMA: devolve a ficha achada, ou null se nao existir.
+    // Escrito uma vez, usado quatro vezes ate o fim do projeto.
+    static Aluno buscarPorMatricula(ArrayList<Aluno> lista, String matricula) {
+        for (int i = 0; i < lista.size(); i++) {
+            Aluno a = lista.get(i);
+            // Preenchimento da LACUNA:
+            if (a.getMatricula().equals(matricula)) {
+                return a;
+            }
+        }
+        return null;            // percorreu tudo e nao achou
+    }
+
+    // O balcao pergunta a matricula e usa a busca para responder.
+    static void buscar(ArrayList<Aluno> lista, Scanner teclado) {
+        System.out.print("Matricula procurada: ");
+        String matricula = teclado.nextLine().trim();
+        Aluno a = buscarPorMatricula(lista, matricula);
+
+        // GUARDA: confere o null ANTES de usar o resultado.
+        if (a == null) {
+            System.out.println("Nenhuma ficha com a matricula " + matricula + ".");
+        } else {
+            System.out.println("Achei: " + a.getMatricula() + " | " + a.getNome() + " | " + a.getCurso());
+        }
+    }
+        
+    // Atualizar reusa a busca: escrever uma vez, chamar quantas vezes precisar.
+    static void atualizar(ArrayList<Aluno> lista, Scanner teclado) {
+        System.out.print("Matricula da ficha a atualizar: ");
+        String matricula = teclado.nextLine().trim();
+        Aluno a = buscarPorMatricula(lista, matricula);
+        if (a == null) {
+            System.out.println("Nenhuma ficha com a matricula " + matricula + ".");
+            return;
+        }
+        System.out.print("Novo curso de " + a.getNome() + ": ");
+        String novoCurso = teclado.nextLine().trim();
+
+        // a variavel a segura a MESMA ficha que esta na lista: mudar por
+        // aqui muda o que a listagem mostra depois. Nao precisa reinserir.
+        a.setCurso(novoCurso);
+        System.out.println("Ficha atualizada: " + a.getMatricula() + " | " + a.getNome() + " | " + a.getCurso());
     }
 }
