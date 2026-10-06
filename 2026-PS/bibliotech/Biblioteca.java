@@ -2,37 +2,55 @@ import java.util.ArrayList;
 
 public class Biblioteca {
 
-    // O 0..* do diagrama: cada lista guarda muitas referencias.
     private ArrayList<Livro> livros;
     private ArrayList<Leitor> leitores;
     private ArrayList<Emprestimo> emprestimos;
 
     public Biblioteca() {
-        this.livros = new ArrayList<Livro>();
-        this.leitores = new ArrayList<Leitor>();
-        this.emprestimos = new ArrayList<Emprestimo>();
+        livros = new ArrayList<>();
+        leitores = new ArrayList<>();
+        emprestimos = new ArrayList<>();
     }
 
     public void cadastrarLivro(Livro livro) {
         livros.add(livro);
     }
 
-    public void cadastrarLeitor(Leitor leitor) {
+    public boolean cadastrarLeitor(Leitor leitor) {
+        if (buscarLeitor(leitor.getMatricula()) != null) {
+            return false;
+        }
+
         leitores.add(leitor);
+        return true;
     }
 
     public void listarAcervo() {
-        System.out.println("--- Acervo ---");
+        System.out.println("=== ACERVO DA BIBLIOTECA ===");
 
-        for (int i = 0; i < livros.size(); i++) {
-            System.out.println(livros.get(i));
+        for (Livro livro : livros) {
+            System.out.println(livro);
         }
     }
 
-    public Livro buscarLivro(String titulo) {
+    public String obterAcervoComoTexto() {
+        if (livros.isEmpty()) {
+            return "Nenhum livro cadastrado.";
+        }
+
+        String texto = "";
+
         for (int i = 0; i < livros.size(); i++) {
-            if (livros.get(i).getTitulo().equals(titulo)) {
-                return livros.get(i);
+            texto = texto + livros.get(i) + "\n";
+        }
+
+        return texto;
+    }
+
+    public Livro buscarLivro(String titulo) {
+        for (Livro livro : livros) {
+            if (livro.getTitulo().equalsIgnoreCase(titulo)) {
+                return livro;
             }
         }
 
@@ -40,9 +58,9 @@ public class Biblioteca {
     }
 
     public Leitor buscarLeitor(String matricula) {
-        for (int i = 0; i < leitores.size(); i++) {
-            if (leitores.get(i).getMatricula().equals(matricula)) {
-                return leitores.get(i);
+        for (Leitor leitor : leitores) {
+            if (leitor.getMatricula().equals(matricula)) {
+                return leitor;
             }
         }
 
@@ -69,12 +87,24 @@ public class Biblioteca {
     }
 
     public boolean devolver(String titulo) {
-        for (int i = 0; i < emprestimos.size(); i++) {
-            Emprestimo emprestimo = emprestimos.get(i);
+        for (Emprestimo e : emprestimos) {
+            if (e.getLivro().getTitulo().equalsIgnoreCase(titulo)
+                    && e.estaAtivo()) {
 
-            if (emprestimo.getLivro().getTitulo().equals(titulo)
-                    && emprestimo.estaAtivo()) {
-                return emprestimo.registrarDevolucao();
+                return e.registrarDevolucao();
+            }
+        }
+
+        return false;
+    }
+
+    public boolean devolver(String titulo, String matricula) {
+        for (Emprestimo e : emprestimos) {
+            if (e.getLivro().getTitulo().equalsIgnoreCase(titulo)
+                    && e.getLeitor().getMatricula().equals(matricula)
+                    && e.estaAtivo()) {
+
+                return e.registrarDevolucao();
             }
         }
 
@@ -82,8 +112,22 @@ public class Biblioteca {
     }
 
     public void listarEmprestimos() {
-        for (int i = 0; i < emprestimos.size(); i++) {
-            System.out.println(emprestimos.get(i));
+        System.out.println("=== HISTÓRICO DE EMPRÉSTIMOS ===");
+
+        for (Emprestimo e : emprestimos) {
+            System.out.println(e);
+        }
+    }
+
+    public void listarLivrosDoLeitor(String matricula) {
+        System.out.println(
+            "--- Livros com a matricula " + matricula + " ---"
+        );
+
+        for (Emprestimo e : emprestimos) {
+            if (e.getLeitor().getMatricula().equals(matricula)) {
+                System.out.println(e.getLivro());
+            }
         }
     }
 }
