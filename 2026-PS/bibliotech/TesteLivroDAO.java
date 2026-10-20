@@ -5,10 +5,16 @@ public class TesteLivroDAO {
 
         LivroDAO dao = new LivroDAO();
 
-        boolean resultado = dao.excluirLivro(3);
-
-        System.out.println(
-            "Livro excluído: " + resultado
+        boolean atualizou = dao.atualizarLivro(
+            999999,
+            "Livro Inexistente",
+            "Autor Desconhecido",
+            2026
         );
+
+        boolean excluiu = dao.excluirLivro(999999);
+
+        System.out.println("Atualização: " + atualizou);
+        System.out.println("Exclusão: " + excluiu);
     }
 }
