@@ -6,15 +6,15 @@ public class TesteLivroDAO {
         LivroDAO dao = new LivroDAO();
 
         boolean atualizou = dao.atualizarLivro(
-            999999,
-            "Livro Inexistente",
-            "Autor Desconhecido",
-            2026
+            4,
+            "Dom Casmurro - Edição Atualizada",
+            "Machado de Assis",
+            1899
         );
 
-        boolean excluiu = dao.excluirLivro(999999);
+        boolean excluiu = dao.excluirLivro(7);
 
-        System.out.println("Atualização: " + atualizou);
-        System.out.println("Exclusão: " + excluiu);
+        System.out.println("Livro atualizado: " + atualizou);
+        System.out.println("Livro excluído: " + excluiu);
     }
 }
